@@ -18,7 +18,7 @@ public class BotController {
     @Autowired
     ProviderService providerService;
 
-    @RequestMapping(value = "/amazon", method = RequestMethod.GET)
+    @RequestMapping(value = "/imdb", method = RequestMethod.GET)
     public ResponseEntity<?> getProduct(@RequestParam String keyword)
     {
         return new ResponseEntity<>(providerService.searchProducts(keyword), HttpStatus.OK);
