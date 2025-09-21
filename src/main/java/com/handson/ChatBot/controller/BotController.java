@@ -1,6 +1,7 @@
 package com.handson.ChatBot.controller;
 
-import com.handson.ChatBot.service.ProviderService;
+import com.handson.ChatBot.service.ChuckNorrisService;
+import com.handson.ChatBot.service.MoviesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +19,17 @@ import java.io.IOException;
 public class BotController {
 
     @Autowired
-    ProviderService providerService;
+    MoviesService providerService;
+    @Autowired
+    ChuckNorrisService chuckNorrisService;
 
     @RequestMapping(value = "/imdb", method = RequestMethod.GET)
-    public ResponseEntity<?> getProduct(@RequestParam String keyword) throws IOException {
+    public ResponseEntity<?> getMovies(@RequestParam String keyword) throws IOException {
         return new ResponseEntity<>(providerService.searchProducts(keyword), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/ChuckNorris", method = RequestMethod.GET)
+    public ResponseEntity<?> getChuckNorris(@RequestParam String category) throws IOException {
+        return new ResponseEntity<>(chuckNorrisService.searchCategory(category), HttpStatus.OK);
     }
 }

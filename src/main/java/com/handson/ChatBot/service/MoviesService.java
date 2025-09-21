@@ -12,8 +12,23 @@ import java.util.regex.Pattern;
 
 
 @Service
-public class ProviderService {
+public class MoviesService {
+    // Class to map JSON response
+    public static class Joke {
+        private String id;
+        private String value;
+        private java.util.List<String> categories;
 
+        // Getters and setters
+        public String getId() { return id; }
+        public void setId(String id) { this.id = id; }
+
+        public String getValue() { return value; }
+        public void setValue(String value) { this.value = value; }
+
+        public java.util.List<String> getCategories() { return categories; }
+        public void setCategories(java.util.List<String> categories) { this.categories = categories; }
+    }
 
     public String searchProducts(String keyword) throws IOException {
         return parseMovieHtml(keyword);
