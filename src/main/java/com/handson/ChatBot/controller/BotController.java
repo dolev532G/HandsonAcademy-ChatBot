@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @Service
 @RestController
 @RequestMapping("/bot")
@@ -19,8 +21,7 @@ public class BotController {
     ProviderService providerService;
 
     @RequestMapping(value = "/imdb", method = RequestMethod.GET)
-    public ResponseEntity<?> getProduct(@RequestParam String keyword)
-    {
+    public ResponseEntity<?> getProduct(@RequestParam String keyword) throws IOException {
         return new ResponseEntity<>(providerService.searchProducts(keyword), HttpStatus.OK);
     }
 }

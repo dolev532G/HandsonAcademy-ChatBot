@@ -7,13 +7,44 @@ import okhttp3.Response;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 @Service
 public class ProviderService {
 
-    public String searchProducts(String keyword) {
-        return "Searched for:" + keyword;
+
+    public String searchProducts(String keyword) throws IOException {
+        return parseMovieHtml(keyword);
     }
+
+    private String parseMovieHtml(String keyword) throws IOException {
+        String html = getMoviesHtml(keyword);  // this is your raw HTML
+        StringBuilder res = new StringBuilder(); // use StringBuilder for building the result
+
+        Matcher matcher = MOVIE_PATTERN.matcher(html);
+        while (matcher.find()) {
+            String title = matcher.group(1).trim();
+            String year = matcher.group(2).trim();
+            String actors = matcher.group(3).trim();
+
+            res.append("🎬 ").append(title).append(" (").append(year).append(")").append("<br>")
+                    .append("   ⭐ Actors: ").append(actors).append("<br>\n");
+        }
+
+        return res.toString().replaceAll("(?i)<br\\s*/?>", "\n");
+
+    }
+
+
+    // Regex to capture title, year/type, and actors from IMDb search results
+    public static final Pattern MOVIE_PATTERN = Pattern.compile(
+            "<a[^>]*class=\"ipc-metadata-list-summary-item__t\"[^>]*>([^<]+)</a>.*?" +           // Title
+                    "<ul[^>]*ipc-metadata-list-summary-item__tl[^>]*>.*?<li[^>]*><span[^>]*>([^<]+)</span>.*?</ul>.*?" +  // Year / Type
+                    "<ul[^>]*ipc-metadata-list-summary-item__stl[^>]*>.*?<li[^>]*><span[^>]*>([^<]+)</span>.*?</ul>",     // Actors
+            Pattern.DOTALL
+    );
 
     private String getMoviesHtml(String keyword) throws IOException {
         OkHttpClient client = new OkHttpClient();
@@ -35,9 +66,14 @@ public class ProviderService {
             throw new IOException("Unexpected code " + response);
         }
 
-        assert response.body() != null;
         return response.body().string();
     }
+
+
+
+
+
+
 
 
 }
